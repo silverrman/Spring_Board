@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Application</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .form-container {
+            margin-bottom: 20px;
+        }
+        .stored-info {
+            margin-top: 20px;
+        }
+        .stored-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .rating {
+            margin-left: 10px;
+        }
+        .clear-item {
+            margin-left: 10px;
+            cursor: pointer;
+            color: red;
+        }
+        .rating-options {
+            margin-left: 10px;
+        }
+        .rating-option {
+            cursor: pointer;
+            margin-right: 5px;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="form-container">
+        <label for="inputField">Enter Movie Title:</label>
+        <input type="text" id="inputField">
+        <button id="storeButton">Add</button>
+    </div>
+    <div class="stored-info" id="storedInfo"></div>
+
+    <script>
+        $(document).ready(function() {
+            $('#storeButton').click(function() {
+                const inputField = $('#inputField');
+                const storedInfo = $('#storedInfo');
+                if (inputField.val().trim() !== "") {
+                    const div = $('<div>').addClass('stored-item');
+
+                    const p = $('<p>').text(inputField.val());
+
+                    const rating = $('<span>').addClass('rating').text('Rating: 0');
+
+                    const ratingOptions = $('<div>').addClass('rating-options');
+                    for (let i = 1; i <= 5; i++) {
+                        const ratingOption = $('<span>').addClass('rating-option').text(i);
+                        ratingOption.click(function() {
+                            rating.text('Rating: ' + i);
+                        });
+                        ratingOptions.append(ratingOption);
+                    }
+
+                    const clearItem = $('<span>').addClass('clear-item').text('Clear');
+                    clearItem.click(function() {
+                        div.remove();
+                    });
+
+                    div.append(p, rating, ratingOptions, clearItem);
+                    storedInfo.append(div);
+
+                    inputField.val("");
+                }
+            });
+
+            $('#displayButton').click(function() {
+                const storedInfo = $('#storedInfo');
+                alert(storedInfo.html());
+            });
+        });
+    </script>
+</body>
+</html>
