@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Currency Conversion Form with Enhanced UI -->
+<form method="POST" class="conversion-form">
+    <div class="row">
+        <!-- From Currency Section -->
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="from_currency">
+                    <i class="fas fa-money-bill-wave me-1"></i> Converting from:
+                </label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-globe"></i></span>
+                    <input type="text" 
+                           class="form-control" 
+                           id="from_currency" 
+                           name="from_currency" 
+                           placeholder="Enter currency code" 
+                           value="{{ request.form.get('from_currency', '') }}" 
+                           autocomplete="off" 
+                           required>
+                </div>
+                <small class="form-text text-muted">
+                    <i class="fas fa-info-circle me-1"></i> Common codes: USD, EUR, GBP, JPY
+                </small>
+            </div>
+        </div>
+        
+        <!-- To Currency Section -->
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="to_currency">
+                    <i class="fas fa-exchange-alt me-1"></i> Converting to:
+                </label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-globe"></i></span>
+                    <input type="text" 
+                           class="form-control" 
+                           id="to_currency" 
+                           name="to_currency" 
+                           placeholder="Enter currency code" 
+                           value="{{ request.form.get('to_currency', '') }}" 
+                           autocomplete="off" 
+                           required>
+                </div>
+                <small class="form-text text-muted">
+                    <i class="fas fa-info-circle me-1"></i> Enter a three-letter currency code
+                </small>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Amount Section -->
+    <div class="form-group mt-3">
+        <label for="amount">
+            <i class="fas fa-calculator me-1"></i> Amount to Convert:
+        </label>
+        <div class="input-group">
+            <span class="input-group-text">$</span>
+            <input type="text" 
+                   class="form-control" 
+                   id="amount" 
+                   name="amount" 
+                   placeholder="Enter amount" 
+                   value="{{ request.form.get('amount', '') }}" 
+                   required>
+        </div>
+        <small class="form-text text-muted">
+            <i class="fas fa-info-circle me-1"></i> Enter a numeric value (e.g. 100, 99.99)
+        </small>
+    </div>
+    
+    <!-- Popular Currency Pairs Quick Selections -->
+    <div class="popular-pairs mt-4 mb-4">
+        <p class="text-center mb-3"><i class="fas fa-star me-1"></i> <strong>Popular Currency Pairs</strong></p>
+        <div class="row text-center">
+            <div class="col-6 col-md-3 mb-2">
+                <span class="badge bg-light text-dark p-2" onclick="fillCurrencyPair('USD', 'EUR')" style="cursor: pointer;">
+                    USD → EUR
+                </span>
+            </div>
+            <div class="col-6 col-md-3 mb-2">
+                <span class="badge bg-light text-dark p-2" onclick="fillCurrencyPair('EUR', 'USD')" style="cursor: pointer;">
+                    EUR → USD
+                </span>
+            </div>
+            <div class="col-6 col-md-3 mb-2">
+                <span class="badge bg-light text-dark p-2" onclick="fillCurrencyPair('USD', 'GBP')" style="cursor: pointer;">
+                    USD → GBP
+                </span>
+            </div>
+            <div class="col-6 col-md-3 mb-2">
+                <span class="badge bg-light text-dark p-2" onclick="fillCurrencyPair('GBP', 'USD')" style="cursor: pointer;">
+                    GBP → USD
+                </span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Convert Button -->
+    <button type="submit" class="btn btn-primary mt-3">
+        <i class="fas fa-exchange-alt me-2"></i> Convert Currency
+    </button>
+</form>
+
+<!-- Conversion Result Display -->
+{% if result %}
+<div class="result-container mt-4">
+    <div class="row">
+        <div class="col-md-5 text-center">
+            <div class="from-currency mb-3">
+                <h5>From</h5>
+                <div class="currency-code">{{ from_currency }}</div>
+                <div class="amount-value">{{ amount }}</div>
+            </div>
+        </div>
+        
+        <div class="col-md-2 d-flex align-items-center justify-content-center">
+            <i class="fas fa-arrow-right fa-2x text-primary"></i>
+        </div>
+        
+        <div class="col-md-5 text-center">
+            <div class="to-currency">
+                <h5>To</h5>
+                <div class="currency-code">{{ to_currency }}</div>
+                <div class="result-value">{{ symbol }} {{ converted_amount }}</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="conversion-details text-center mt-3 pt-3 border-top">
+        <small class="text-muted">
+            <i class="fas fa-info-circle me-1"></i> 
+            Exchange rate based on values from exchangerate.host
+        </small>
+    </div>
+</div>
+{% endif %}
+
+<!-- Non-JS fallback for quick currency pair selection -->
+<noscript>
+    <style>
+        .popular-pairs { display: none; }
+    </style>
+</noscript>
+
+<!-- Minimal JavaScript for enhanced UX -->
+<script>
+    function fillCurrencyPair(from, to) {
+        document.getElementById('from_currency').value = from;
+        document.getElementById('to_currency').value = to;
+        document.getElementById('amount').focus();
+    }
+</script>
+{% endblock %}
